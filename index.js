@@ -176,8 +176,6 @@ function displayCourses(data) {
                 `;
         })
         .join("");
-
-    addCourseClicked();
 }
 
 //------------------------------------------------------------
