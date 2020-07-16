@@ -80,7 +80,7 @@ async function getAllData() {
 //------------------------------------------------------------
 //                  Button Clicked Events
 //------------------------------------------------------------
-function addCourseClicked() {
+function generateCourseSelect() {
     for (let i = 0; i < addCourseBtn.length; i++) {
         addCourseBtn[i].addEventListener("click", () => {
             console.log("Clicked card index of: " + i);
@@ -99,7 +99,7 @@ addStudentForm.addEventListener("submit", addNewStudent);
 function generateStudents() {
     getAllData()
         .then(displayStudents)
-        .then(addCourseClicked) // Under construction
+        .then(generateCourseSelect) // Under construction
         .catch((err) => {
             console.error(err);
         });
