@@ -9,6 +9,11 @@ let addCourseBtn = document.getElementsByClassName("addCourseBtn");
 let courseSelect = document.getElementsByClassName("courseSelect")[0];
 // added student success alert
 let alertMsg = document.querySelector(".alertMessage");
+//arrays to acting as Database
+let studentsArr = [];
+let coursesArr = [];
+//check if fetch request recieved data (less API Calls)
+let isDataRetrieved = false;
 
 // URL variables
 let studentPostURL = "https://student-challenge-api.herokuapp.com/students";
@@ -34,8 +39,7 @@ function hasCourses(course) {
 }
 //function to check if student hasStudents
 function hasStudents(student) {
-    const hasStudent = student;
-    if (hasStudent) {
+    if (student) {
         return `
             <ul class="list-group text-center">
                 <li class="list-group-item">Student 1</li>
@@ -71,22 +75,22 @@ async function getJSON(url) {
 }
 // Get all the data and store inside a Promise.all as Array
 async function getAllData() {
-    const studentJSON = await getJSON(studentsURL);
-    const courseJSON = await getJSON(coursesURL);
-    const allData = [studentJSON, courseJSON]; // objects to arrays for simpler data retrieval
+    let allData = []; // objects to arrays for simpler data retrieval
+
+    if (isDataRetrieved === false) {
+        isDataRetrieved = true;
+        const studentJSON = await getJSON(studentsURL);
+        const courseJSON = await getJSON(coursesURL);
+        allData.push(studentJSON, courseJSON);
+    } else {
+        allData.push(studentsArr, coursesArr);
+    }
     return Promise.all(allData);
 }
 
 //------------------------------------------------------------
 //                  Button Clicked Events
 //------------------------------------------------------------
-function generateCourseSelect() {
-    for (let i = 0; i < addCourseBtn.length; i++) {
-        addCourseBtn[i].addEventListener("click", () => {
-            console.log("Clicked card index of: " + i);
-        });
-    }
-}
 studentBtn.addEventListener("click", () => generateStudents());
 coursesBtn.addEventListener("click", () => generateCourses());
 addStudentForm.addEventListener("submit", addNewStudent);
@@ -99,7 +103,7 @@ addStudentForm.addEventListener("submit", addNewStudent);
 function generateStudents() {
     getAllData()
         .then(displayStudents)
-        .then(generateCourseSelect) // Under construction
+        .then(generateCourseOptions)
         .catch((err) => {
             console.error(err);
         });
@@ -117,6 +121,11 @@ function generateCourses() {
 function displayStudents(data) {
     const studentData = data[0];
     let courseData = data[1];
+    // Store data into Array DB
+    studentsArr = studentData;
+    coursesArr = courseData;
+
+    // generate HTML from data
     studentDeck.innerHTML = studentData
         .map((el) => {
             let status = el.status;
@@ -142,20 +151,12 @@ function displayStudents(data) {
                     `;
         })
         .join(""); //Joins all student cards without comma separators
-
-    //Add Course Data to Options/Select -
-    courseSelect.innerHTML = ""; //empty options
-    courseSelect.innerHTML += "<option selected>Choose...</option>"; // add choose option
-    courseSelect.innerHTML += courseData //insert course options
-        .map((el) => {
-            return `
-                <option value="${el.name.toLowerCase()}">${el.name}</option>
-            `;
-        })
-        .join(""); //Joins all options without comma separators
 }
 function displayCourses(data) {
     const courseData = data[1];
+    // Store data into Array DB
+    coursesArr = courseData;
+
     studentDeck.innerHTML = courseData
         .map((el) => {
             return `
@@ -178,6 +179,21 @@ function displayCourses(data) {
         .join("");
 }
 
+// --------------------
+//              Generate course options -------------
+// -------------
+function generateCourseOptions() {
+    //Add Course Data to Options/Select -
+    courseSelect.innerHTML = ""; //empty options
+    courseSelect.innerHTML += "<option selected>Choose...</option>"; // add choose option
+    courseSelect.innerHTML += coursesArr //insert course options
+        .map((el) => {
+            return `
+                <option value="${el.name.toLowerCase()}">${el.name}</option>
+            `;
+        })
+        .join(""); //Joins all options without comma separators
+}
 //------------------------------------------------------------
 //                  Add New Student Function
 //-----------------------------------------------------------
@@ -215,16 +231,3 @@ function addStudentConfirm(data) {
         `;
     });
 }
-
-//------------------------------------------------------------
-//                  Add Course to Student Function
-//-----------------------------------------------------------
-
-// function addCourse(e) {
-//     e.preventDefault();
-//     fetch(studentsURL)
-//         .then(checkStatus)
-//         .then((res) => res.json())
-//         .then(addCourseConfirm)
-//         .catch((err) => console.error(err));
-// }
