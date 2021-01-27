@@ -2,6 +2,7 @@
 <html >
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Students App</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -15,11 +16,71 @@
         <h1 class="display-4">Student Enrollment program</h1>
         <hr class="my-4">
           <button class="btn btn-outline-info" type="button" id="students">Students</button>
-          <button class="btn btn-outline-info" type="button" id="Courses">courses</button>
-          <button class="btn btn-outline-info" type="button" id="new_student">New Student</button>
+          <button class="btn btn-outline-info" type="button" id="Courses">Courses</button>
+              <!-- Button trigger modal -->
+          <button class="btn btn-outline-info" type="button" id="new_student" data-toggle="modal" data-target="#newStudent">New Student</button>
       </div>
     </div>
+    <div class="container" id="studentContent">
+      <div id="studentDeck" class="row row-cols-1 row-cols-lg-3"></div>
+    </div>
 
+    <!-- Add New Student Modal -->
+    <div class="modal fade" id="newStudent" tabindex="-1" role="dialog"aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Add New Student</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+              <div class="alertMessage"></div>
+              <form id="addStudentForm">
+                <div class="form-group">
+                  <label for="firstName">First Name</label>
+                  <input type="text" class="form-control" id="firstName" required>
+                  <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                </div>
+                <div class="form-group">
+                  <label for="lastName">Last Name</label>
+                  <input type="text" class="form-control" id="lastName"  required>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+          <!-- Add Course to Student-->
+      <div class="modal fade" id="addCourse" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Add New Course</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              </div>
+              <div class="modal-body">
+                <div class="alertMessage"></div>
+                <form id="addCourseForm">
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <label class="input-group-text" for="inputGroupSelect01">All Courses</label>
+                    </div>
+                    <select class="custom-select courseSelect" id="inputGroupSelect01">
+                      <option selected>Choose...</option>
+                    </select>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
 
 
 
